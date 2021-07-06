@@ -1,0 +1,17 @@
+{
+  BROWSER: chrome,
+  BASE_URL:
+    https://prod.app.cosmosid.com
+  ADMIN_BASE_URL:
+    https://prod.app.cosmosid.com/admin
+  users:
+    user
+    user2
+  db_conn_str:
+    user@ip:pass:db_name
+  redis_conn_str:
+    example_prod
+  LOGIN_PAGE:
+    https://api.cosmosid.com/login
+  SUPPORTED_BROWSERS: ["chrome", "firefox", "edge", "opera"]
+}

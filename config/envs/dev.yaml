@@ -1,0 +1,8 @@
+{
+  BASE_URL:
+    https://app.cosmosid.com
+  ADMIN_BASE_URL:
+    https://app.cosmosid.com/admin
+  user:
+    user
+}
