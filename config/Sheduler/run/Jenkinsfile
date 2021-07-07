@@ -1,0 +1,82 @@
+String ENV_STUB = 'Please select ENV'
+String appName = 'pytest-tests'
+String appContainerRepo = '432304291388.dhr...'
+String imageTag = ' '
+String hashShort = ' '
+String allureResultsFolder = 'allure-results'
+
+def String_parameters = [
+        choice(choices: ['chrome_remote', 'fref...')
+        choice(choices: [ENV_STUB, 'dev', 'qa', 'prod')
+        //gitParameter(branch:'', branchFilter...)
+        ]
+        properties([
+        parameters(settings_parameters)
+        ])
+        class Docker Comand Builder{
+        string name
+        List <String> portMap = []
+        /*can be full format ${appContainerRepo}/${...*/
+        String image
+        String tag = 'latest'
+        String network
+        List<String> volumes = []
+
+        /*build the string builder with the docker*/
+        String Builder build(){
+        stringBuilder result = Stringbuilder.new result << 'docker run'
+        if(this.name?.trim()){result<<"..."}
+        if(this.network?.trim()){result<<"..."}
+        if(this.workdir?.trim()){result<<"..."}
+        for(ports in this.portMap){result<<...}
+        for(volumeMap in this.volumes){result<<...}
+        for(envVar in this.envs){result<<""}
+        result<<"${this.name}:${this.tag}"
+        return result
+        }
+       @override
+       String to String(){
+            return this,build().tostring()
+       }
+}
+node('docker-build'){
+    stage('Prepare workdir'){
+          cleanWs()
+    }
+    stage('Prepare Jenkins job'){
+         imageTag = getHash()
+         def fileList = readFile 'Jenkinsfile/run'
+         def fileListStr = fileList.Split('\n').c...
+         print 'List of choises for next jobs'
+         println "${fileListStr}"
+         settings_parameters.add(choice(choices:..)
+
+         def_markersList = readFile 'Jenkinsfile/...'
+         def_markersListStr = "Select markers for..."
+         println 'List of markers for next job'
+         println "${def_markersListStr}"
+         settings_parameters.add(string(defaultvalue...)
+
+         properties([
+                   parameters(settings_parameters)
+         ])
+         }
+         properties([
+                parameters(settings_parameters)
+         ])
+        }
+          stage('Check parMETERS'){
+             hashShort = getHashShort()
+             if(param.ENV == ENV_STUB){
+             print(n 'Please select ENV'....)
+             sh 'exit2'
+             }
+             currentBuild.displayName = "${parameters.ENV....}"
+             currentBuild.description = "${TEST_TYPE}"
+             }
+          stage('Login EcR'){
+             sh('aws esr get_login__no_include_email...')
+          }
+          stage('Update docker image'){
+          sh('docker pull ${appContainerRepo}:${im...')}
+        }
