@@ -3,8 +3,19 @@ from pathlib import Path
 import yaml
 
 HOME_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-BROWSER = os.environ.get('BROWSER')
-
+BASE_URL = 'https://www.cosmosid.com/'
+LOGIN_PAGE = 'https://app.cosmosid.com/login'
+BROWSER = os.environ.get('BROWSER', 'chrome')
+config_path = Path.home()/'PycharmProjects'/'gl-procamp_PythonProject'/'Core'
+config_path_json = config_path/'env-configs'/f'.js'
+config_path_yaml = config_path/'config.yaml'
+defaults = {
+    "ENV": 'uat',
+    "BROWSER": 'chrome',
+    "BASE_URL": "https://www.cosmosid.com",
+    "LOGIN_PAGE": "https://app.cosmosid.com/login",
+    "SUPPORTED_BROWSERS": ["chrome", "firefox", "edge", "opera"]
+}
 
 class Config:
     def __init__(self):

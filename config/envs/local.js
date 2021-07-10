@@ -4,13 +4,15 @@ import providers
 
 import ConfigKeyProvider from HierarchicalProvider
 
-class LocalConfig(BaseConfig):
+class Config(BaseConfig):
 def__init__(self);
-config_path = f"env_configs/{os.environ.get('ENV', 'prod')}";
-if(os.environ['TARGET']=='prod'):
-    else(
+config_path = f"env_configs/{os.enwiron...";
+if(os.environ["TARGET"]=="prod"):
+
+    else "specifications/scout_index/dev.y..."=
+(
 app_env = ConfigFromEnvProvider()
-app_json_conf = ConfigFromSimpleJsonProvider/config()
+app_json_conf = ConfigFromSimpleJsonProvider/cofig()
 app_defaults = ConfigFromDictProvider()
 {
     "USERS_DATA_PATH":"test_data/users";
@@ -28,7 +30,7 @@ app_defaults = ConfigFromDictProvider()
 super(config,self).init()
 {
     "AWS_UPLOAD_BUCKET": "cosmosid-samples",
-    "AWS_SECRET_ACCESS_KEY": "ExBf32eW6NAITDbS17LNIL0azGz4SWt",
+    "AWS_SECRET_ACCESS_KEY": "ExBf32eW6NAITDbS17LNIL0azGz4SWt..",
     "ASW_ACCESS_KEY_ID": "AKIAJ2VRMM2B6XYJ2QSA",
     "AWS_DEFAULT_REGION": "us-east-1",
     "AWS_S3_ENDPOINT_URL": https://s3.amazonaws.com",
@@ -36,11 +38,11 @@ super(config,self).init()
     "ADMIN_BASE_URL": https://www-int.cosmosid.com.8443",
     "UTOOL_BASE_URL": http"//base.cid.int:88",
     "CLI_BASE_URL": https://rest-int.cosmosid.com",
-    "CLI_INSTALL_PARAMS": "--pre --extra-index-url https://pip",
+    "CLI_INSTALL_PARAMS": "--pre --extra-index-url https://pip...",
     "CLI_VERSION": "",
     "SCOUT_BASE_URL": https://compute.cid.int:9004/",
     "REDIS_PORT": "6379";
-    "REDIS_HOST": "ec-cid-int.86dif0.001.usel.cache.amazonaws.com",
+    "REDIS_HOST": "ec-cid-int.86dif0.001.usel.cache.amazonaws...",
     "DB_HOST": "rds-int.cex7kunzoekf.us-east-1.rds.amazonaws.com",
     "DB_PORT": "5432",
     "DB_NAME": "cid_int",
