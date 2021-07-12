@@ -1,0 +1,58 @@
+node ('docker-build') {
+ def appName = 'pytest-tests'
+ def appContainerRepo = us-east-1.amazonaws.com/
+ def imageName = ""
+ def hash = ""
+
+ stage("Fetch git repository") {
+    cleanWs
+    checkout scm
+ }
+
+ stage("Preparing workspace") {
+    imageName = {appContainerRepo}:${getHash()}
+    hash = getHashShort()
+
+    currentBuild.displayName = ${env.BRANCH_NAME}:${}
+    currentBuild.description = Git Hash: ${hash}
+
+    sh("aws ecr get-login --no-include-email --region")
+ }
+
+ stage("Check image already exists") {
+    String longHash = getHash()
+    String imageTag = getImageTagFromRegistry(appName, longHash)
+
+    if (imageTag == longHash) {
+        error("Image tag found: ${imageTag}. Will not create the same image")
+    }
+    echo("No image tag found: ${longHash}. Proceeding with create steps")
+ }
+
+ stage("Build image") {
+    sh("docker build -t ${imagename} .")
+ }
+
+ stage("Publish image") {
+    sh("docker push ${imageName}")
+ }
+
+ def String getHashShort() {
+    String hash = sh(script: "git rev-parse --short HEAD", returnStdout: true)
+    return hash.trim()
+ }
+
+ def String getHash() {
+    String hash = sh(script: "git rev-parse HEAD", returnStdout: true)
+    return hash.trim()
+ }
+
+ def String getImageTagFromRegistry(appName, tag) {
+    String imageTag = sh(script:
+    "aws ecr describe-images \
+      --repository-name = ${appName} \
+      --image-id = imageTag = ${tag} \
+      --query 'imageDetails[*].[imageTag]' \
+      --output text 2> /dev/null ||:", returnStdout: true)
+    return hash.trim()
+ }

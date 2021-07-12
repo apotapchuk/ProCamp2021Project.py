@@ -1,0 +1,105 @@
+String ENV_STUB = 'Please select ENV'
+String appName = 'pytest-tests'
+String appContainerRepo = us-east-1.amazonaws.com/
+String imageTag = ''
+String hashShort = ''
+String allureResultsFolder = 'allure-results'
+
+    def settings parameters = [
+        choice(choices: ['chrome remote', 'firefox remote', 'chrome'], defaultValue: )
+        choice(choices: [ENV_STUB, 'dev', 'qa', 'uat', 'lc', 'prod'], defaultValue: )
+        gitParameter(branch: '', branchFilter: 'origin/(.*)', defaultValue: )
+        choice(choices: ['tests'], description: 'Specify tests to run')
+        string(defaultValue: "smoke", description: 'Test type to run')
+        ]
+
+properties ([
+    parameters(settings_parameters)
+])
+
+class DockerCommandBuilder {
+
+    String name
+    List<String> portMap = []
+    /* can be full format ${app(ContainerRepo}/${image} */
+    String image
+    String tag = 'latest'
+    String network
+    List<String> volumes = []
+    List<String> envs = []
+    String workdir
+
+    /* builds the string builder with the docker service
+    */
+    StringBuilder build() {
+        StringBuilder result = StringBuilder.newInstance()
+        result << 'docker run'
+        if (this.name?.trim()) {result << " --name ${this.name}" }
+        if (this.network?.trim()) {result << " --network ${this.network}" }
+        if (this.workdir?.trim()) {result << " --workdir ${this.workdir}" }
+        for (ports in this.portMap) {result << " --port ${ports}" }
+        for (volumeMap in this.volumes) {result << " --volume ${volumeMap}" }
+        for (envVar in this.envs) {result << " -e ${envVar}" }
+        return result
+    }
+
+    @Override
+    String toString() {
+        return this.build().toString()
+    }
+}
+
+node ('docker-build') {
+ def appName = 'pytest-tests'
+ def appContainerRepo = us-east-1.amazonaws.com/${appName}
+ def imageName = ""
+ def hash = ""
+
+ stage("Fetch git repository") {
+    cleanWs()
+    checkout scm
+ }
+
+ stage("Preparing workspace") {
+    imageName = ${appContainerRepo}:${getHash()}
+    hash = getHashShort()
+
+    currentBuild.displayName - ${env.BRANCH_NAME}:${}
+    currentBuild.description  Git Hash: ${hash}
+
+    sh("aws ecr get-login --no-include-email --region us-east-1 | bash -e")
+ }
+
+ stage ("Check image already exists") {
+    String longHash = getHash()
+    String imageName = getImageTagFromRegistry(appName, longHash)
+
+    if (imageTag == longHash) {
+        error("Image tag found: "${imageTag}. "Will not create the same")
+    }
+    echo("No image tag found: "${longHash})." Proceeding with create step")
+ }
+
+ stage ("Build image") {
+ sh("docker build -t ${imageName} .")
+ }
+
+ stage ("Publish image") {
+ sh("docker push ${imageName}")
+ }
+
+ def String getHashShort() {
+     String hash = sh(script: "git rev-parse HEAD", returnStdout: true)
+     return hash.trim()
+ }
+
+ def String getImageTagFromRegistry(appName, tag) {
+    String imageTag = sh(script:
+    "qws ecr describe-images \
+    -- repository-name = ${appName} \
+    -- image-ids = imageTag = ${tag} \
+    -- query 'imageDetails[*].[imageTags]' \
+    -- output text 2 > /dev/null ||:", returnStdout: true)
+    return imageTag.trim()
+ }
+ 

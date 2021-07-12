@@ -1,0 +1,158 @@
+def ENV = 'uat'
+def BROWSER = 'chrome_remote'
+def TESTTYPE = 'smoke'
+def TESTS = 'src/tests'
+
+def gitRepo = cosmoid@vs-ssh.visualstudio.com:v3/cosmosid/CosmosID/
+def gitCredentials = '21605acb-3145-4a4c-a12c-e0bb9cfe90d8'
+
+def test_job_name = "common-test-python-run"
+
+def SLACK_CHANNEL = "#monitiring"
+def EMAIL_LC_LIST_TEMPLATE = '...'
+def SUBJ_TEMPLATE = 'CosmoID'
+def EMAIL_TEMPLATE = ""
+""" _TEST_REPORT__"""
+stripMargin().stripIndent()
+properties ([
+    gitParameters (branch:
+            branchFilter: 'origin/(.*candidate.*)',
+            defaultValue: ''.
+            description: 'Wich branch do you wish to deploy&',
+            listsize: '10',
+            name: 'BRANCH_NAME'
+            quickFilterEnabled: false,
+            selectedValue: 'TOP',
+            sortMode: 'ASCENDING_SMART',
+            tagFilter: '*',
+            type: 'PT_BRANCH',
+            useRepository: gitRepo),
+    String(name: 'SLACK_CHANNEL',
+           defaultValue: "${SLACK_CHANNEL}",
+           description: 'Slack channel name to send messages'),
+    String(name: 'EMAIL_TO_LIST',
+           defaultValue: "${EMAIL_TO_LIST_TEMPLATE}",
+           description: 'Sends email to.'),
+    String(name: 'EMAIL_CC_LIST',
+           defaultValue: "${EMAIL_CC_LIST_TEMPLATE}",
+           description: 'Sends email CC.'},
+    String(name: 'SUBJ',
+           defaultValue: "${SUBJ_TEMPLATE}",
+           description: 'Subject template'),
+    text(name: 'EMAIL',
+           defaultValue: "${EMAIL_TEMPLATE}",
+           description: 'Email template'),
+    ])
+])
+
+node('jenkins-slave') {
+    stage("Check input parameters") {
+       if (params.EMAIL_TO_LIST == ''){
+            println "Please put email TO list"
+            sh 'exit 3'
+       }
+
+       if (params.EMAIL_CC_LIST == ''){
+            println "Please put email CC list"
+            sh 'exit 3'
+       }
+
+       if (params.SUBJ == ''){
+            println "Please put part of email subject"
+            sh 'exit 3'
+       }
+
+       if (params.EMAIL == ''){
+            println "Please provide email"
+            sh 'exit 2'
+       }
+
+       if (params.SLACK_CHANNEL == ''){
+            println "Please provide channel name"
+            sh 'exit 2'
+
+    }
+
+}
+
+stage("Setup repository"){
+    git(
+        url: gitRepo,
+        credentials: gitCredentials,
+        branch: env.BRANCH_NAME
+    )
+    env.HASH = getHashShort()
+    println "Chosen environment: "${ENV}
+    println "Chosen git branch: "${env.BRANCH_NAME}
+    println "Chosen git hash: "${env.HASH}
+
+    EMAIL = EMAIL.replaceAll("__TEST_REPORT__", ${env.BUILD_URL}all)
+}
+
+branchNormalize = env.BRANCH_NAME.replace('/', '%252F')
+def auto_tests = ''
+stage("Run automated tests") {
+    auto_tests = build(
+        job: ${test_job_name}/${branchNormalize},
+        propagate: false,
+        parameters: [
+            String(name: 'BROWSER', value: BROWSER),
+            String(name: 'TEST_TYPE', value: TEST_TYPE),
+            String(name: 'ENV', value: ENV),
+            String(name: 'BRANCH_NAME', value: BRANCH_NAME),
+            String(name: 'TESTS', value: TESTS),
+        ]
+    )
+}
+
+stage("Copy results") {
+    copyArtifacts (
+        projectName: ${test_job_name}/${branchNormalize},
+        filter: 'allure*.zip',
+        fingerprintArtifacts: true,
+        target: 'artifacts',
+        selector: specific("${auto_tests.getNumber()}")
+
+    )
+}
+
+stage("Create allure report") {
+    unzip zipFile: 'artifacts/allure_packed.zip', dir: 'allure-result'
+    allure includeProperties: false,
+}
+
+stage("Archive Artifacts") {
+    archiveArtifacts artifacts: 'artifacts/*.zip', fingerprint: true
+}
+
+stage("Send email"){
+    mail(
+        from: ${params.EMAIL},
+        to: ${params.EMAIL_TO_LIST},
+        cc: ${params.EMAIL_CC_LIST},
+        bcc: '',
+        replyTo: '',
+        subject: ${SUBJ},
+        body: ${EMAIL}
+    )
+}
+
+stage("Send message to the Slack"){
+    def attachmentPayload = [
+        text: ${SUBJ}. "Please contact dev team if you have any questions."
+        fallback: ${SUBJ},
+        color: 'good',
+        fields:[
+                title: 'Linl to test report',
+                value: ${env.BUILD_URL}allure,
+                short: false
+        ]
+    ]
+
+    slackSend(channel: ${SLACK_CHANNEL}, attachments: attachmentPayload)
+}
+}
+def String getHashShort() {
+    String hash = sh(script: "git rev-parse --short HEAD")
+    return hash.trim()
+}

@@ -1,0 +1,22 @@
+# Ignore the logs, config, test, venv, test_data directory
+logs/
+config/
+src/test/
+venv/
+src/test_data/
+
+# Ignore the password file
+passwords.txt
+
+# Ignore git and cache files
+.git
+.cache
+.github
+config/.gitignore
+
+# Ignore all the markdown and class files
+*.md
+**/*.class
+
+# Ignore all vscode files
+.vscode
