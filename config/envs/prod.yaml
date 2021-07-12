@@ -1,5 +1,6 @@
 {
-  BROWSER: chrome,
+  BROWSER:
+    chrome
   BASE_URL:
     https://prod.app.cosmosid.com
   ADMIN_BASE_URL:
@@ -13,5 +14,6 @@
     example_prod
   LOGIN_PAGE:
     https://api.cosmosid.com/login
-  SUPPORTED_BROWSERS: ["chrome", "firefox", "edge", "opera"]
+  SUPPORTED_BROWSERS:
+    ["chrome", "firefox", "edge", "opera"]
 }

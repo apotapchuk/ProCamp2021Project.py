@@ -6,77 +6,146 @@ String hashShort = ' '
 String allureResultsFolder = 'allure-results'
 
 def String_parameters = [
-        choice(choices: ['chrome_remote', 'fref...')
-        choice(choices: [ENV_STUB, 'dev', 'qa', 'prod')
-        //gitParameter(branch:'', branchFilter...)
-        ]
-        properties([
+    choice(choices: ['chrome_remote', 'frefox_remote', 'safary'], descriptions: )
+    choice(choices: [ENV_STUB, 'dev', 'qa', 'uat', 'lc', 'prod'], descriptions: )
+    gitParameter(branch: '', branchFilter: origin/(.*), defaultValue: )
+    choice(choices: ['tests'], description: 'Specify tests to run', name: 'TEST_TYPE', defaultValue: smoke)
+    ]
+    properties([
         parameters(settings_parameters)
-        ])
-        class Docker Comand Builder{
-        string name
-        List <String> portMap = []
-        /*can be full format ${appContainerRepo}/${...*/
-        String image
-        String tag = 'latest'
-        String network
-        List<String> volumes = []
+    ])
+    class Docker Comand Builder{
 
-        /*build the string builder with the docker*/
-        String Builder build(){
-        stringBuilder result = Stringbuilder.new result << 'docker run'
-        if(this.name?.trim()){result<<"..."}
-        if(this.network?.trim()){result<<"..."}
-        if(this.workdir?.trim()){result<<"..."}
-        for(ports in this.portMap){result<<...}
-        for(volumeMap in this.volumes){result<<...}
-        for(envVar in this.envs){result<<""}
-        result<<"${this.name}:${this.tag}"
+    String name
+    List <String> portMap = []
+    /*can be full format ${appContainerRepo}/${...*/
+    String image
+    String tag = 'latest'
+    String network
+    List<String> volumes = []
+    List<String> envs = []
+    String workdir
+
+    /*build the string builder with the docker service
+    */
+    StringBuilder build(){
+        StringBuilder result = StringBuilder.newInstance()
+        result << 'docker run'
+        if (this.name?.trim()) { result<< --name ${this.name}}
+        if(this.network?.trim()) {result<< --network ${this.network}}
+        if(this.workdir?.trim()) {result<< --workdir ${this.workdir}}
+        for(ports in this.portMap) {result<< --ports ${this.ports}}
+        for(volumeMap in this.volumes) {result<< --volume ${this.volumeMap}}
+        for(envVar in this.envs) {result<< --envVar ${this.envVar}}
+        result << ${this.name}:${this.tag}
         return result
-        }
-       @override
-       String to String(){
-            return this,build().tostring()
-       }
+    }
+    @override
+    String to String(){
+        return this.build().toString()
+    }
 }
 node('docker-build'){
+
     stage('Prepare workdir'){
           cleanWs()
+          checkout scm
     }
     stage('Prepare Jenkins job'){
          imageTag = getHash()
-         def fileList = readFile 'Jenkinsfile/run'
-         def fileListStr = fileList.Split('\n').c...
-         print 'List of choises for next jobs'
+
+         def fileList = readFile 'Jenkinsfile/run/pytest list'
+         def fileListStr = fileList.Split('\n').collect {it as String }
+         print 'List of choices for next jobs'
          println "${fileListStr}"
-         settings_parameters.add(choice(choices:..)
+         settings_parameters.add(choice(choices: fileListStr, descriptions: 'Specify tests file to run', defaultValue: smoke)
 
-         def_markersList = readFile 'Jenkinsfile/...'
-         def_markersListStr = "Select markers for..."
+         def_markersList = readFile 'Jenkinsfile/run/pytest_markers'
+         def_markersListStr = "Select markers for tests. E.g. \"Smoke andCA\"\n${markersList}"
          println 'List of markers for next job'
-         println "${def_markersListStr}"
-         settings_parameters.add(string(defaultvalue...)
+         println "${markersListStr}"
+         settings_parameters.add(string(defaultValue: 'smoke', descriptions: markersListStr, name: 'TEST_TYPE')
 
          properties([
-                   parameters(settings_parameters)
+             parameters(settings_parameters)
          ])
-         }
-         properties([
-                parameters(settings_parameters)
-         ])
-        }
-          stage('Check parMETERS'){
+    }
+
+         stage('Check parameters'){
              hashShort = getHashShort()
+
              if(param.ENV == ENV_STUB){
-             print(n 'Please select ENV'....)
-             sh 'exit2'
+                print(n 'Please select ENV'
+                sh 'exit 2'
              }
-             currentBuild.displayName = "${parameters.ENV....}"
-             currentBuild.description = "${TEST_TYPE}"
-             }
-          stage('Login EcR'){
-             sh('aws esr get_login__no_include_email...')
-          }
-          stage('Update docker image'){
-          sh('docker pull ${appContainerRepo}:${im...')}
+
+             currentBuild.displayName = ${parameters.ENV}:${TEST_TYPE}
+             currentBuild.description = ${TEST_TYPE} ${env.BRANCH_NAME}:${hashShort} on ${params.ENV}
+         }
+         stage('Login ECR'){
+             sh('aws esr get_login__no_include_email --region us-east-1 | bash -e')
+         }
+         stage('Update docker image'){
+            sh("docker pull ${appContainerRepo}:${imageTag}")
+         }
+
+         stage ('Run pytest') {
+            String suffix = UUID.randomUUID().toString()
+            String containerName = "${appName}-${suffix}"
+            try {
+             println 'Building cmd'
+             cmd = new DockerCommandBuilder(
+                name: containerName,
+                image: appContainerRepo,
+                tag: imageTag,
+                network: 'host'
+             )
+             println 'Adding volumes to cmd'
+             cmd.volumes.addAll([
+                ${WORKSPACE}/${allureResultsFolder}:/app/${allureResultsFolder},
+                ${WORKSPACE}/htmlresults:/app/htmlresults,
+                /mnt/cosmosid-artifacts:/cosmosid-artifacts])
+             println 'Adding envs to cmd'
+             cmd.envs.addAll([
+                TARGET=${params.ENV},
+             ])
+
+             sh(${cmd.toString()} --browser ${BROWSER} \
+                -m \ ${TEST_TYPE}\ \
+                --instafall \
+                --alluredir ${allureResultsFolder} ${TESTS} \
+                --html = htmlresults/report.html \
+                --self-contained-html
+                )
+         }
+         catch (all) {
+             currentBuild.result = 'UNSTABLE'
+         }
+         finally {
+             echo 'Finished running tests.'
+         }
+        }
+
+        stage('Generate reports') {
+            sh('sudo chmod 777 allure-results -R')
+            allure includeProperties: false, jdk: '', reportBuildPolicy: 'ALWAYS', results: [[path: 'allureResultsFolder']
+            zip zipFile: 'allure_packed,zip', archive: false, dir: 'allure-results'
+        }
+
+        stage('Archive Artifacts') {
+            archiveArtifacts artifacts: 'allure_packed.zip', fingerprint: true
+            archiveArtifacts artifacts: 'htmlresults/*', fingerprint: true
+        }
+    }
+
+    String getHashShort() {
+        String hash = sh(script: 'git rev-parse -- short HEAD', returnStdout: true)
+        return hash.trim()
+    }
+
+    String getHash() {
+        String hash = sh(script: 'git rev-parse HEAD', returnStdout: true)
+    }
+
+
         }

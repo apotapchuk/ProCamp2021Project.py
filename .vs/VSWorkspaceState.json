@@ -1,11 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\config",
-    "\\config\\envs",
-    "\\config\\readers",
-    "\\config\\Sheduler",
-    "\\config\\src"
+    "\\config\\Jenkinsfile\\scheduler",
+    "\\src",
+    "\\src\\tests",
+    "\\src\\tests\\functional",
+    "\\src\\tests\\login"
   ],
+  "SelectedNode": "\\src\\tests\\functional\\test_login.POST.py",
   "PreviewInSolutionExplorer": false
 }
