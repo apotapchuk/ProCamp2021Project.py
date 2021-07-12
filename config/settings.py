@@ -1,5 +1,5 @@
 import os
-from utils import utils
+from src.utils import utils
 
 ENV = os.environ.get('ENV')
 BROWSER = os.environ.get('BROWSER')
@@ -7,8 +7,9 @@ BASE_URL = 'https://www.cosmosid.com/'
 SOURCE_URL = 'https://www.cosmosid.com/'
 LOGIN_PAGE = 'https://app.cosmosid.com/login'
 BASE_API_URL = 'https://app.cosmosid.com/api/'
-USERNAME = 'gl-procamp-2021@globalligoc.com'
-PASSWORD = 'DXdUVEFNpHA8LXm'
+SITE_NAME = Metagenomics Cloud
+USERNAME = UserFactory.get_username()
+PASSWORD = UserProvider.get_userpassw()
 USERNAME1_INVALID = f'gl{USERNAME}'
 USERNAME2_INVALID = f'gl{USERNAME}'
 PASSWORD1_INVALID = f'1{PASSWORD}'
