@@ -48,7 +48,7 @@ def test_get_new_user(new_user):
 @pytest.mark.parametrize("BROWSERS", chrome, firefox, edge, opera)
 @allure.story('Open LoginPage')
 def test_open_login_page(self):
-    self.get_url(self.BASE_URL + "/#/login")
+    self.get_url(self.BASE_URL + "/login")
     for i in range(50):
         elem = driver.find_element_by_class_name('cid4')
         elem.click()
@@ -99,6 +99,7 @@ def test_random_user_login_to_the_site(new_user2):
 def test_unsuccessful_login():
     response = WebApiClient.login(USERNAME1_INVALID, PASSWORD1_INVALID)
     assert response['token'] is None
+    assert response_status_code == 401
 
 @pytest.mark.smoke
 @pytest.mark.api

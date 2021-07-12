@@ -1,6 +1,6 @@
 import os
 import allure
-import request
+import requests
 from config.config import CONFIG
 from selenium import webdriver
 from selenium.webdriver.common.by import By
