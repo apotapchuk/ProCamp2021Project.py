@@ -17,14 +17,8 @@
 # Byte-compiled / optimized / DLL files
 _pychare_/
 *.py[cod]
-Index: env-configs/__init__
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-< >UTF-8
-
 #IDE
 .idea/
 
 #Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]

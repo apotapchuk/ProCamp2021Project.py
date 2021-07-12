@@ -1,0 +1,46 @@
+the field follows the syntax of cron (with minor differences). Specifically, each line consists of 5 fields separated by TAB or whitespace:
+ MINUTE HOUR DOM MONTH DOW
+ MINUTE   Minutes within the hour (0–59)
+ HOUR The hour of the day (0–23)
+ DOM  The day of the month (1–31)
+ MONTH    The month (1–12)
+ DOW  The day of the week (0–7) where 0 and 7 are Sunday.
+
+
+run all tests once a day on the 1st and 15th of every month
+
+lets run against the integration environment at 15 past the hour 15 * * * * %env=int
+
+run QA too 30 * * * * %%env=qa
+
+leave spaces where you want them around the parameters. They'll be trimmed.
+
+node('parametrize-docker-build'){
+    stage('Prepare workdir'){
+          cleanWs()
+    }
+    stage('Prepare Jenkins job'){
+properties([
+  parameters_name{
+    string(name: 'USER', defaultValue: 'USER', 'SUPERUSER', description: ''),
+    string(name: '%env', defaultValue: 'dev', 'qa', 'prod' description: 'use %.js')
+    }
+    triggers {
+        parameterizedCron('''
+            leave spaces where you want them around the parameters. They'll be trimmed.
+            we let the build run with the default name
+            'USER', dev.js ;
+            'SUPERUSER', qa.js;
+        ''')
+    }
+    stages {
+        stage('Example') {
+            steps {
+                echo "${params.USER} ${params.%env}"
+                script { currentBuild.description = "${params.USER} ${params.%env}" }
+            }
+        }
+    }
+}
+
+])
