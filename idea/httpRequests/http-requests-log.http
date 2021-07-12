@@ -1,0 +1,69 @@
+GET http://app.cosmosid.com/api/item
+Accept: application/json
+
+<> 2021-05-28T113706.200.html
+
+###
+
+GET http://app.cosmosid.com/api/item
+Accept: application/json
+
+<> 2021-05-28T113644.200.html
+
+###
+
+POST http://app.cosmosid.com/api/test
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="my-field-name"
+
+my-field-value
+--WebAppBoundary
+
+
+{}
+--WebAppBoundary--
+
+<> 2021-05-28T112114-1.200.html
+
+###
+
+GET http://app.cosmosid.com/api/item
+Accept: application/json
+
+<> 2021-05-28T112114.200.html
+
+###
+
+POST http://app.cosmosid.com/api/test
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="my-field-name"
+
+my-field-value
+--WebAppBoundary
+
+
+{}
+--WebAppBoundary--
+
+<> 2021-05-28T112047.200.html
+
+###
+
+GET http://app.cosmosid.com/api/item
+Accept: application/json
+
+<> 2021-05-28T110831.200.html
+
+###
+
+GET http://cosmosid.com/api/item
+Accept: application/json
+
+<> 2021-05-28T110710.404.html
+
+###
+

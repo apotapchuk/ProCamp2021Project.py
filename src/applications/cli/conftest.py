@@ -18,8 +18,7 @@ def cli(regular_user_api_session):
         CONFIG.cli_version,
         )
 
-
-if cli_fixture.is_installed():
-    logging.INFO()
-    cli_fixture.destroy()
-    cli_fixture.install()
+        if cli_fixture.is_installed():
+            logging.INFO()
+            cli_fixture.destroy()
+            cli_fixture.install()
