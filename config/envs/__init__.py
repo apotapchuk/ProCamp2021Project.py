@@ -1,7 +1,7 @@
 import collections
-import providers
+from providers import providers
 import self as self
-from providers import provider
+from data.service.browsers_provider import provider
 
 
 class HierarchicalProvider(ConfigKeyProvider):
@@ -17,11 +17,11 @@ class HierarchicalProvider(ConfigKeyProvider):
     In case it not configured from the one in the passed...
     """
 
-    def __init__(self):
+    def __init__(self, None):
         self.ConfigKeyProvider = ConfigKeyProvider
-        self.provider = provider
+        self.providers = providers
 
-    def add_ConfigkeyProvider(self, ConfigKeyProvider):
+    def add(self, ConfigKeyProvider):
         """
         :param ConfigKeyProvider: Single item or list of ConfigKeyProvider
         """
@@ -34,6 +34,7 @@ class HierarchicalProvider(ConfigKeyProvider):
             self.provider.append(provider)
         else:
             raise ValueError("Provider must be of ConfigKeyProvider")
+
         if isinstance(providers, collections.Sequence):
             for item in providers:
                 provider.add_checked(item)

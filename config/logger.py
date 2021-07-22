@@ -1,7 +1,8 @@
 import logging
 import sys
+import os
 
-from coverage.debug import os
+LOGGER = logging.getLogger(__name__)
 
 
 def prepare_dirs_loggers(config, script):

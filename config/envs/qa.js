@@ -6,18 +6,18 @@ import ConfigKeyProvider from HierarchicalProvider
 
 class Config(BaseConfig):
 def__init__(self):
-config_path = f"env_configs/{os.enwiron..."
+config_path = f"env_configs/{os.enwiron}"
 if os.environ["TARGET"] == "qa"
-    else "specifications/scout_index/qa.y..."
+    else "specifications/scout_index/qa.yaml"
 )
 app_env = ConfigFromEnvProvider()
-app_json_conf = ConfigFromSimpleJsonProvid...
+app_json_conf = ConfigFromSimpleJsonProvider
 app_defaults = ConfigFromDictProvider(
-"USERS_DATA_PATH": "data/user..."
-"SAMPLES_DATA_PATH": "data/sampl..."
-"SCOUT_DATA_PATH": f"specifications/workf..."
+"USERS_DATA_PATH": "data/users"
+"SAMPLES_DATA_PATH": "data/samples"
+"SCOUT_DATA_PATH": f"specifications/workfow"
 "SCOUT_SPECS_PATH": "scout_spec_path",
-"AWS_UPLOADS_BUCKET": "cosm..."
+"AWS_UPLOADS_BUCKET": "cosmosid_aws"
 "AWS_SECRET_ACCESS_KEY":
 "AWS_ACCESS_KEY_ID": "..."
 "AWS_DEFAULT_REGION": "US -..."
