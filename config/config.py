@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
 import yaml
+from betterconf import Congig, field
 
 HOME_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 BASE_URL = 'https://www.cosmosid.com/'
 LOGIN_PAGE = 'https://app.cosmosid.com/login'
 BROWSER = os.environ.get('BROWSER', 'chrome')
-config_path = Path.home()/'PycharmProjects'/'gl-procamp_PythonProject'/'Core'
+config_path = Path.home()/'GL_ProCamp2021'/'ProCam2021Project.py'
 config_path_json = config_path/'env-configs'/f'.js'
 config_path_yaml = config_path/'config.yaml'
 defaults = {
@@ -15,11 +16,12 @@ defaults = {
     "BASE_URL": "https://www.cosmosid.com",
     "LOGIN_PAGE": "https://app.cosmosid.com/login",
     "SUPPORTED_BROWSERS": ["chrome", "firefox", "edge", "opera"]
+    "timeout": 5
 }
 
 class Config:
     def __init__(self):
-        self.config_path = config_path(os.path.join(HOME_PATH, 'core', 'config.yaml'))
+        self.config_path = config_path(os.path.join(HOME_PATH, 'config', 'config.yaml'))
         self.base_url = config_path(os.path(BASE_URL, "BASE_URL"))
         self.port = "port"
         self.user = "user"

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <title>CosmosID</title>
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-56ZGBLC');</script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <meta name="google-signin-scope" content="profile email"/>
+    <meta name="google-signin-client_id"
+          content="38067888607-cf00c936aj87u4ns3f2rkbcoh8q470nn.apps.googleusercontent.com"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63931332-1"></script>
+    <script>window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'AW-879881853');</script>
+    <script>window.__RUNTIME__APP__CONFIGURATION = {
+        "base_url": "https://app.cosmosid.com",
+        "disableLiveChat": false,
+        "illumina": {
+            "authURL": "https://basespace.illumina.com/oauth/authorize",
+            "clientId": "cfda98e436874f7fa1fbe89a18950332",
+            "scope": "browse global,create global",
+            "callbackURL": "/illumina.html",
+            "response_type": "code"
+        },
+        "amazon": {
+            "key": "AKIAJ2VRMM2B6XYJ2QSA",
+            "bucket": "cosmosid-genius-production",
+            "aws_url": "https://s3.amazonaws.com",
+            "sub_folder": "origin_files/web"
+        },
+        "shopify": {
+            "accountConfigs": {
+                "accessToken": "a08253a989a1ca0f0dc99f51b465fa24",
+                "domain": "cosmosid.myshopify.com",
+                "appId": "6"
+            }, "creditId": "9609802251"
+        },
+        "google": {"client_id": "705891409800-irmlf7r538q8fsk7ug081jcp5hp8hop6.apps.googleusercontent.com"},
+        "flags": {
+            "show_illumina": true,
+            "show_payment": true,
+            "show_zymo": true,
+            "show_tax_id": true,
+            "external_storage": false,
+            "fingerprints_table": false
+        }
+    };</script>
+    <script>function gapiOnLoadCallback() {
+        gapi.load('auth2', function () {
+            gapi.auth2.init();
+
+            gapi.load('signin2', function () {
+                if (document.getElementById('g-signin2')) {
+                    var opts = {
+                        theme: 'dark',
+                        onsuccess: function (user) {
+                            return window.onGoogleSignIn(user);
+                        },
+                    };
+                    gapi.signin2.render('g-signin2', opts);
+                }
+            });
+        });
+    }</script>
+    <script src="https://apis.google.com/js/platform.js?onload=gapiOnLoadCallback" async defer="defer"></script>
+</head>
+<body>
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-56ZGBLC" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!--[if IE 8]>
+<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+<![endif]-->
+<div id="mount"></div>
+<script src="/js/cosmosid.js?768c76bf444ae7bf68d5"></script>
+</body>
+</html>

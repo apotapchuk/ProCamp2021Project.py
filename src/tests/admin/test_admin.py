@@ -2,12 +2,18 @@ import time
 from _pytest import pytest
 from scout_client import scout
 from src.tools.helpers.parsers.scout_queries_parsers import ScoutQueriesParser
+import pytest
+from src.config import CONFIG
+from scout_client import scout
+from src.tools.helpers.parsers.scout_queries_parser import QueriesParser
 
 
 class ScoutClient:
+    def __init__(self):
+        self.scout_base_url = SCOUT_BASE_URL()
 
-    @staticmethod
-    def scout_config_provider():
+    @pytest.fixture("class")
+    def scout_config_base_url():
         return scout(CONFIG_SCOUT_BASE_URL)
 
     RestAssured.requestSpecification = requestSpecification

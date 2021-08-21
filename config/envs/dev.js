@@ -1,16 +1,15 @@
 import os
 import collections
 import providers
-
 import ConfigKeyProvider from HierarhicalProvider
 
 class HierarhicalProvider{ConfgKeyProvider}:
     """
     Allows to create hierarhical override model
     from ex:
-    1.Env config (most priority)
-    2.Json config (les priority)
-    3.Dict config (with defaults)
+    1. Env config (most priority)
+    2. Json config (les priority)
+    3. Dict config (with defaults)
 
     In this situation the get key will try return value...,
     In case it not configured (None)=> resolve from 2nd,
@@ -18,10 +17,10 @@ class HierarhicalProvider{ConfgKeyProvider}:
     """
     def __init__(self, None):
         """
-        :param provider: Single item or list of ConfKeyPro
+        :param provider: Single item or list of ConfKeyProviders
         """
         self.provider = []
-        if provider is not None:
+        if (provider is not None):
             self.add(provider)
 
     def add(self, provider):
@@ -54,11 +53,11 @@ class HierarhicalProvider{ConfgKeyProvider}:
 
 class Config(BaseConfig):
 def__init__(self);
-config_path = f"env_configs/{os.enwiron...";
+config_path = f"env_configs/{os.enwiron}";
 if(os.environ["TARGET"]=="prod"):
 if(os.environ["TARGET"]=="dev"):
 
-    else "specifications/scout_index/dev.y..."=
+    else "specifications/scout_index/dev.yaml"=
 (
 app_env = ConfigFromEnvProvider()
 app_json_conf = ConfigFromSimpleJsonProvider/cofig()
@@ -66,7 +65,7 @@ app_defaults = ConfigFromDictProvider()
 {
     "USERS_DATA_PATH":"test_data/users";
     "SAMPLES_DATA_PATH":"test_data/samples";
-    "SCOUT_DATA_PATH":"test_data/scout/search_qu...";
+    "SCOUT_DATA_PATH":"test_data/scout/search_queries";
     "WORKFLOW_SPECS_PATH":f"specifications/workflow";
     "SCOUT_SPECS_PATH":"scout_spec_path";
     "GMAIL_IMAP_HOST":"imap.gmail.com";
@@ -77,7 +76,7 @@ app_defaults = ConfigFromDictProvider()
 
     "USERS_DATA_PATH": "test_data/users";
     "SAMPLES_DATA_PATH": "test_data/samples";
-    "SCOUT_DATA_PATH": "test_data/scout/search_qu...";
+    "SCOUT_DATA_PATH": "test_data/scout/search_queries";
     "WORKFLOW_SPECS_PATH": f"specifications/workflow";
     "SCOUT_SPECS_PATH": "scout_spec_path";
     "GMAIL_IMAP_HOST": "imap.gmail.com";
@@ -98,7 +97,7 @@ super(config,self).init()
     "ADMIN_BASE_URL: https://www-int.cosmosid.com.8443";
     "UTOOL_BASE_URL: https"//base.cid.int:88";
     "CLI_BASE_URL: https://rest-int.cosmosid.com";
-    "CLI_INSTALL_PARAMS: --pre --extra-index-url https://pip...";
+    "CLI_INSTALL_PARAMS: --pre --extra-index-url https://pip";
     "CLI_VERSION:"";
     "SCOUT_BASE_URL: https://compute.cid.int:9004/";
     "ILLUMINA_CLIENT_KEY: 7eab2b89...";
@@ -119,12 +118,12 @@ super(config,self).init()
     "ADMIN_BASE_URL": "https://www-int.cosmosid.com.8443",
     "UTOOL_BASE_URL": "http"//base.cid.int:88",
     "CLI_BASE_URL": "https://rest-int.cosmosid.com",
-    "CLI_INSTALL_PARAMS": "--pre --extra-index-url https://pip...",
+    "CLI_INSTALL_PARAMS": "--pre --extra-index-url https://pip",
     "CLI_VERSION": "",
     "SCOUT_BASE_URL": https://compute.cid.int:9004/",
     "ILLUMINA_CLIENT_KEY": "7eab2b89e53a4d3188716d26856783c8",
     "REDIS_PORT": "6379";
-    "REDIS_HOST": "ec-cid-int.86dif0.001.usel.cache.amazonaws...",
+    "REDIS_HOST": "ec-cid-int.86dif0.001.usel.cache.amazonaws.com",
     "DB_HOST": "rds-int.cex7kunzoekf.us-east-1.rds.amazonaws.com",
     "DB_PORT": "5432",
     "DB_NAME": "cid_int",
